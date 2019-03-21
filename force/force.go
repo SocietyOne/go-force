@@ -56,6 +56,41 @@ func Create(version, clientId, clientSecret, userName, password, securityToken,
 	return forceApi, nil
 }
 
+func CreateWithoutResources(version, clientId, clientSecret, userName, password string) (*ForceApi, error) {
+	oauth := &forceOauth{
+		clientId:     clientId,
+		clientSecret: clientSecret,
+		userName:     userName,
+		password:     password,
+	}
+
+	forceApi := &ForceApi{
+		apiResources:           make(map[string]string),
+		apiSObjects:            make(map[string]*SObjectMetaData),
+		apiSObjectDescriptions: make(map[string]*SObjectDescription),
+		apiVersion:             version,
+		oauth:                  oauth,
+	}
+
+	// Init oauth
+	err := forceApi.oauth.Authenticate()
+	if err != nil {
+		return nil, err
+	}
+
+	// Init Api Resources
+	err = forceApi.getApiResources()
+	if err != nil {
+		return nil, err
+	}
+	err = forceApi.getApiSObjects()
+	if err != nil {
+		return nil, err
+	}
+
+	return forceApi, nil
+}
+
 func CreateWithAccessTokenOnly(version, clientId, accessToken, instanceUrl string) (*ForceApi, error) {
 	oauth := &forceOauth{
 		clientId:    clientId,
