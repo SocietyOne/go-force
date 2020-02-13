@@ -80,10 +80,10 @@ func (forceApi *ForceApi) CompositeQuery(query string, referenceID string) *Comp
 //CompositeGetSObject generates a CompositeRequest in the format of a GetSObject
 //@Params (obj SObject) only needs an empty object to define SObject type
 func (forceApi *ForceApi) CompositeGetSObject(id string, obj SObject, fields []string, referenceID string) *CompositeRequest {
-
 	log.Printf("%v \n", forceApi.apiSObjects)
-	if forceApi.apiSObjects[obj.ApiName()] = nil {
-		log.Panicln("There was an error getting the object api name")
+	t := forceApi.apiSObjects[obj.ApiName()]
+	if t == nil {
+		log.Panicf("There was an error getting the object api name %s inside map %+v", obj.ApiName(), forceApi.apiSObjects)
 	}
 	path := strings.Replace(forceApi.apiSObjects[obj.ApiName()].URLs[rowTemplateKey], idKey, id, 1)
 
