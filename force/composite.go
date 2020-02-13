@@ -1,8 +1,9 @@
 package force
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -31,7 +32,7 @@ type CompositeResponses struct {
 
 //CompositeResponse describes the response to a single request
 type CompositeResponse struct {
-	Body           json.RawMessage       `force:"body,omitempty"`
+	Body           json.RawMessage   `force:"body,omitempty"`
 	HTTPHeaders    map[string]string `force:"httpHeaders,omitempty"`
 	HTTPStatusCode int               `force:"httpStatusCode,omitempty"`
 	ReferenceID    string            `force:"referenceId,omitempty"`
@@ -80,6 +81,10 @@ func (forceApi *ForceApi) CompositeQuery(query string, referenceID string) *Comp
 //@Params (obj SObject) only needs an empty object to define SObject type
 func (forceApi *ForceApi) CompositeGetSObject(id string, obj SObject, fields []string, referenceID string) *CompositeRequest {
 
+	log.Printf("%v \n", forceApi.apiSObjects)
+	if forceApi.apiSObjects[obj.ApiName()] = nil {
+		log.Panicln("There was an error getting the object api name")
+	}
 	path := strings.Replace(forceApi.apiSObjects[obj.ApiName()].URLs[rowTemplateKey], idKey, id, 1)
 
 	params := url.Values{}
