@@ -103,7 +103,6 @@ func (forceApi *ForceApi) request(method, path string, params url.Values, payloa
 	if err != nil {
 		return fmt.Errorf("Error reading response bytes: %v", err)
 	}
-	forceApi.traceResponseBody(respBytes)
 
 	// Attempt to parse response into out
 	var objectUnmarshalErr error
@@ -118,6 +117,7 @@ func (forceApi *ForceApi) request(method, path string, params url.Values, payloa
 	apiErrors := ApiErrors{}
 	if marshalErr := forcejson.Unmarshal(respBytes, &apiErrors); marshalErr == nil {
 		if apiErrors.Validate() {
+			forceApi.traceResponseBody(respBytes)
 			// Check if error is oauth token expired
 			if forceApi.oauth.Expired(apiErrors) {
 				// Reauthenticate then attempt query again
@@ -134,6 +134,7 @@ func (forceApi *ForceApi) request(method, path string, params url.Values, payloa
 	}
 
 	if objectUnmarshalErr != nil {
+		forceApi.traceResponseBody(respBytes)
 		// Not a force.com api error. Just an unmarshalling error.
 		return fmt.Errorf("Unable to unmarshal response to object: %v", objectUnmarshalErr)
 	}
@@ -144,13 +145,25 @@ func (forceApi *ForceApi) request(method, path string, params url.Values, payloa
 
 func (forceApi *ForceApi) traceRequest(req *http.Request) {
 	if forceApi.logger != nil {
-		forceApi.trace("Request:", "%v", req)
+		url := ""
+		if req.URL != nil {
+			duplicatedReqURL := *req.URL
+			duplicatedReqURL.RawQuery = "***Masked***"
+			url = duplicatedReqURL.String()
+		}
+		forceApi.trace("Request:", "%s %s", req.Method, url)
 	}
 }
 
 func (forceApi *ForceApi) traceResponse(resp *http.Response) {
 	if forceApi.logger != nil {
-		forceApi.trace("Response:", "%v", resp)
+		url := ""
+		if req.URL != nil {
+			duplicatedReqURL := *resp.Request.URL
+			duplicatedReqURL.RawQuery = "***"
+			url = duplicatedReqURL.String()
+		}
+		forceApi.trace("Response Status Code:", "(%d) %s %s", resp.StatusCode, resp.Request.Method, url)
 	}
 }
 
