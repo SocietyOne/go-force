@@ -230,6 +230,6 @@ func (forceApi *ForceApi) TraceOff() {
 func (forceApi *ForceApi) trace(description, format string, value ...interface{}) {
 	if forceApi.logger != nil {
 		logMsg := forceApi.logPrefix + description + " " + format + "\n"
-		forceApi.logger.Printf(logMsg, value)
+		forceApi.logger.Printf(logMsg, value...)
 	}
 }
