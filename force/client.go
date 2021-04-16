@@ -144,18 +144,18 @@ func (forceApi *ForceApi) request(method, path string, params url.Values, payloa
 
 func (forceApi *ForceApi) traceRequest(req *http.Request) {
 	if forceApi.logger != nil {
-		forceApi.trace("Request:", req, "%v")
+		forceApi.trace("Request:", "%v", req)
 	}
 }
 
 func (forceApi *ForceApi) traceResponse(resp *http.Response) {
 	if forceApi.logger != nil {
-		forceApi.trace("Response:", resp, "%v")
+		forceApi.trace("Response:", "%v", resp)
 	}
 }
 
 func (forceApi *ForceApi) traceResponseBody(body []byte) {
 	if forceApi.logger != nil {
-		forceApi.trace("Response Body:", string(body), "%s")
+		forceApi.trace("Response Body:", "%s", string(body))
 	}
 }
