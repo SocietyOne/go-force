@@ -158,7 +158,7 @@ func (forceApi *ForceApi) traceRequest(req *http.Request) {
 func (forceApi *ForceApi) traceResponse(resp *http.Response) {
 	if forceApi.logger != nil {
 		url := ""
-		if req.URL != nil {
+		if resp.Request.URL != nil {
 			duplicatedReqURL := *resp.Request.URL
 			duplicatedReqURL.RawQuery = "***"
 			url = duplicatedReqURL.String()
