@@ -158,9 +158,9 @@ func (forceApi *ForceApi) traceRequest(req *http.Request) {
 func (forceApi *ForceApi) traceResponse(resp *http.Response) {
 	if forceApi.logger != nil {
 		url := ""
-		if resp.Request.URL != nil {
+		if resp.Request != nil && resp.Request.URL != nil {
 			duplicatedReqURL := *resp.Request.URL
-			duplicatedReqURL.RawQuery = "***"
+			duplicatedReqURL.RawQuery = "***Masked***"
 			url = duplicatedReqURL.String()
 		}
 		forceApi.trace("Response Status Code:", "(%d) %s %s", resp.StatusCode, resp.Request.Method, url)
