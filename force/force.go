@@ -225,9 +225,11 @@ func (forceApi *ForceApi) TraceOff() {
 	forceApi.logPrefix = ""
 }
 
-func (forceApi *ForceApi) trace(name string, value interface{}, format string) {
+// trace logs the trace message e.g. "(prefix) (description) (value)\n"
+// format should be the string format of the value passed. e.g. "%v"
+func (forceApi *ForceApi) trace(description, format string, value ...interface{}) {
 	if forceApi.logger != nil {
-		logMsg := "%s%s " + format + "\n"
-		forceApi.logger.Printf(logMsg, forceApi.logPrefix, name, value)
+		logMsg := forceApi.logPrefix + description + " " + format + "\n"
+		forceApi.logger.Printf(logMsg, value...)
 	}
 }
